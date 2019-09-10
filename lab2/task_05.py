@@ -7,7 +7,7 @@ def square(a):
 import turtle
 t = turtle.Turtle()
 
-for i in range (1,11,1):
+for i in range (1,11):
     square(20*i)
     t.penup()
     t.right(135)
