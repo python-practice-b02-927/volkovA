@@ -9,7 +9,7 @@ def line(number):
 import turtle
 t = turtle.Turtle()
 
-n = int(input())
+n = 9
  
 for i in range (n):
     line(n)
