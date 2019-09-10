@@ -5,13 +5,13 @@ from pyrob.api import *
 
 @task
 def task_5_4():
-    while wall_is_beneath() == False:
+    while not wall_is_beneath():
         move_down()
     i = 0
     while True:
         move_right()
         i +=1
-        if wall_is_beneath()==False:
+        if not wall_is_beneath():
             break
     move_down()            
     move_left(i)
