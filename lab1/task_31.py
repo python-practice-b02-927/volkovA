@@ -18,14 +18,12 @@ def find_exit(width):
         if not wall_is_beneath():
             move_down()
             return 1
-            break
         move_right()
         
     for j in range (width):
         if not wall_is_beneath():
             move_down()
             return 1
-            break
         move_left()
     return 0
 
