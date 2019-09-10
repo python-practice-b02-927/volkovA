@@ -30,9 +30,7 @@ def task_8_18():
         if not wall_is_beneath():
             break
         v += coloring()
-        print(v)
         move_right()
-    print(v)
     mov('ax', v)   
         
  
