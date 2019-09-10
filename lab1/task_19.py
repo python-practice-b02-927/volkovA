@@ -24,9 +24,9 @@ def move_to_corner():
 @task
 def task_8_29():
     
-    if check_left() == 1:
+    if check_left():
         move_to_corner()
-    elif check_right() == 1:
+    elif check_right():
         move_to_corner()        
  
 if __name__ == '__main__':
