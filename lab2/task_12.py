@@ -7,8 +7,11 @@ import turtle
 t = turtle.Turtle()
 import math
 
+t.penup()
+t.backward(300)
+t.pendown()
 t.left(90)
-for i in range(10):
+for i in range(5):
     arc(100,180)
     arc(20,180)
 
