@@ -1,5 +1,5 @@
 def polygone(R,n):
-    a = 2*R * math.sin(math.pi / n)
+    a = 2*R*math.sin(math.pi / n)
     for i in range(n):
         t.forward(a)
         t.left(360 / n)
