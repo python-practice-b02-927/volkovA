@@ -1,3 +1,4 @@
+
 from graphics import *
 window = GraphWin("My first picture", 600, 600)
 
