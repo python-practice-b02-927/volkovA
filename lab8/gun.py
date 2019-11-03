@@ -2,10 +2,10 @@ from random import randrange as rnd, choice
 import tkinter as tk
 import math
 import time
-
+import gravity
 
 root = tk.Tk()
-frame = tk.Frame(root)
+#frame = tk.Frame(root)
 root.geometry('800x600')
 canv = tk.Canvas(root, bg='white')
 canv.pack(fill=tk.BOTH, expand=1)
@@ -24,7 +24,7 @@ class Ball():
         self.r = r
         self.vx = vx
         self.vy = vy
-        self.color = choice(['blue', 'green', 'red', 'yellow'])
+        self.color = choice(['blue', 'green', 'red', 'yellow', 'orange'])
         self.id = canv.create_oval(
                 self.x - self.r,
                 self.y - self.r,
@@ -35,6 +35,7 @@ class Ball():
         self.live = 30
 
     def set_coords(self):
+        '''что происзодит?'''
         canv.coords(
                 self.id,
                 self.x - self.r,
@@ -62,7 +63,8 @@ class Ball():
             self.vx = -1*abs(self.vx)
         if self.x < 10:
             self.vx = abs(self.vx)
-        self.vy -= 0.01
+
+        self.vy -= 0.02
         self.y -= self.vy
         self.x += self.vx
         self.set_coords()
@@ -86,14 +88,15 @@ class Ball():
 class Gun():
     def __init__(self):
         self.power = 10
-        self.start_aim = 0
+        self.check_aim = 0
         self.an = 0
         self.id = canv.create_line(20,450,50,420,width=7)
 
-    def fire_start(self, event):
-        self.start_aim = 1
+    def aim_start(self, event):
+        ''''''
+        self.check_aim = 1
 
-    def fire_end(self, event):
+    def aim_end(self, event):
         """Выстрел мячом.
 
         Происходит при отпускании кнопки мыши.
@@ -108,7 +111,7 @@ class Gun():
                         'yellow'
                         )
         balls += [new_ball]
-        self.start_aim = 0
+        self.check_aim = 0
         self.power = 10
 
 
@@ -116,7 +119,7 @@ class Gun():
         """Прицеливание. Зависит от положения мыши."""
         if event:
             self.an = math.atan((event.y-450) / (event.x-20))
-        if self.start_aim:
+        if self.check_aim:
             canv.itemconfig(self.id, fill='orange')
         else:
             canv.itemconfig(self.id, fill='black')
@@ -126,7 +129,7 @@ class Gun():
                     )
 
     def power_up(self):
-        if self.start_aim:
+        if self.check_aim:
             if self.power < 100:
                 self.power += 1
             canv.itemconfig(self.id, fill='orange')
@@ -161,7 +164,7 @@ class Target():
 
 
 def text_ending(n):
-    if n//10 == 1 or n % 10 == 6 or n % 10 == 7 or n % 10 == 8 or n % 10 == 9 or n % 10 == 0:
+    if n//10 == 1 or n//100 ==10 or n % 10 == 6 or n % 10 == 7 or n % 10 == 8 or n % 10 == 9 or n % 10 == 0:
         return 'выстрелов'
     if n % 10 == 1:
         return 'выстрел'
@@ -170,38 +173,38 @@ def text_ending(n):
 
 
 target1 = Target()
-screen1 = canv.create_text(400, 300, text='', font='28')
+textt = canv.create_text(400, 300, text='', font='28')
 gun1 = Gun()
 balls_number = 0
 balls = []
 targets = []
-
+targets += [target1]
 
 def new_game(event=''):
-    global target1, screen1, balls, balls_number, Gun
+    global target1, textt, balls, balls_number, Gun
     target1.new_target()
-    canv.bind('<Button-1>', gun1.fire_start)
-    canv.bind('<ButtonRelease-1>', gun1.fire_end)
-    canv.bind('<Motion>', gun1.targetting)
-
-    while target1.live or balls:
+    while targets:
+        canv.bind('<Button-1>', gun1.aim_start)
+        canv.bind('<ButtonRelease-1>', gun1.aim_end)
+        canv.bind('<Motion>', gun1.targetting)
         for b in balls:
             b.move()
-            if b.collision_check(target1) and target1.live:
-                target1.live = 0
-                target1.hit()
-                gun1.targetting()
-                canv.bind('<Button-1>', '')
-                canv.bind('<ButtonRelease-1>', '')
-                canv.itemconfig(screen1, text='Вы уничтожили цель за ' + str(balls_number) + ' ' + text_ending(balls_number) + '!')
-                new_game()
-        gun1.targetting()
-        gun1.power_up()
+            for t in targets:
+                if b.collision_check(t) and t.live:
+                    t.live = 0
+                    t.hit()
+                    gun1.targetting()
+                    canv.bind('<Button-1>', '')
+                    canv.bind('<ButtonRelease-1>', '')
+                    canv.itemconfig(textt, text='Вы уничтожили цель за ' + str(balls_number) + ' ' + text_ending(balls_number) + '!')
+                    target1.new_target()
+            gun1.targetting()
+            gun1.power_up()
         canv.update()
         time.sleep(0.005)
-    canv.itemconfig(screen1, text='')
+    canv.itemconfig(textt, text='')
     canv.delete(Gun)
-    root.after(1000, new_game)
+    root.after(500, new_game)
     
     
 new_game()
