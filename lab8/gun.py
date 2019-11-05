@@ -138,10 +138,13 @@ class Gun():
 
 
 class Target():
-    def __init__(self):
+    def __init__(self, x, y):
+        self.x = 500
+        self.y = 500
+        self.vx = 1
+        self.vy = 1
         self.points = 0
         self.live = 1
-        self.id = id
         self.id = canv.create_oval(0,0,0,0)
         self.id_points = canv.create_text(30,30,text = self.points,font = '28')
         self.new_target()
@@ -162,6 +165,16 @@ class Target():
         self.points += points
         canv.itemconfig(self.id_points, text=self.points)
 
+    def move(self):
+        self.x += self.vx
+        self.y += self.vy
+        if 800 < self.x + self.r or self.x  < 300:
+            self.vx *= -1
+        if 600 < self.y + self.r or self.y - self.r < 0:
+            self.vy *= -1
+        print('vx= ', self.vx, ' vy = ', self.vy)
+        canv.move(self.id, self.vx, self.vy)
+
 
 def text_ending(n):
     if n//10 == 1 or n//100 ==10 or n % 10 == 6 or n % 10 == 7 or n % 10 == 8 or n % 10 == 9 or n % 10 == 0:
@@ -172,7 +185,7 @@ def text_ending(n):
         return 'выстрела'
 
 
-target1 = Target()
+target1 = Target(500, 500)
 textt = canv.create_text(400, 300, text='', font='28')
 gun1 = Gun()
 balls_number = 0
@@ -190,6 +203,7 @@ def new_game(event=''):
         for b in balls:
             b.move()
             for t in targets:
+                t.move()
                 if b.collision_check(t) and t.live:
                     t.live = 0
                     t.hit()
