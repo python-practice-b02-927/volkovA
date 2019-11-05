@@ -121,19 +121,20 @@ def hit(event):
     for b in balls:
         if (event.x - b.x)**2 + (event.y - b.y)**2 < b.r**2:
             points += round(30 / b.r) + round(0.1*(b.vy**2 + b.vx**2)**0.5)
-            canv.itemconfig(legend, text=str(points))
+            canv.itemconfig(legend, text='Your points: '+str(points))
             b.murder()
             balls.remove(b)
+            return 0
     for s in squares:
         if s.x < event.x < s.x + s.size and s.y < event.y < s.y + s.size:
             points += round(0.6*(s.vy**2 + s.vx**2)**0.5)
-            canv.itemconfig(legend, text=str(points))
+            canv.itemconfig(legend, text='Your points: '+str(points))
             s.murder()
             squares.remove(s)
             rnd_square_creation()
 
 
-legend = canv.create_text(50, 50, text=str(points), font='28', fill='white')
+legend = canv.create_text(150, 50, text='Get as many points as you can!', font='28', fill='white')
 
 rnd_square_creation()
 canv.bind('<Button-1>', hit)
