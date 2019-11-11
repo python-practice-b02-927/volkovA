@@ -190,6 +190,7 @@ class Gun(Agent):
         self.job = None
 
     def start(self):
+        print('sterted')
         self.bind_all()
         super().start()
 
@@ -270,6 +271,7 @@ class Gun(Agent):
         self.vy = 0
 
     def bind_all(self):
+        print("death")
         self.canvas.bind('<Button-1>', self.fire2_start, add='')
         self.canvas.bind('<ButtonRelease-1>', self.fire2_end, add='')
 
@@ -278,7 +280,7 @@ class Gun(Agent):
         root.bind('<KeyRelease-Up>', self.stop_movement, add='')
         root.bind('<Down>', self.set_movement_direction_to_down, add='')
         root.bind('<KeyRelease-Down>', self.stop_movement, add='')
-        root.bind('<Left>', BattleField.change_gun, add='')         #FIXME
+     #FIXME
 
     def unbind_all(self):
         self.canvas.bind('<Button-1>', pass_event, add='')
@@ -397,14 +399,7 @@ class BattleField(tk.Canvas):
         self.catch_victory_job = None
         self.canvas_restart_job = None
 
-
-    def change_gun(self, event):
-        if gun1.job == None:
-            gun2.stop()
-            gun1.start()
-        else:
-            gun1.stop()
-            gun2.start()
+        self.get_root().bind('<Left>', self.change_gun)
 
 
     def remove_targets(self, targets_to_remove=None):
@@ -449,6 +444,7 @@ class BattleField(tk.Canvas):
         self.catch_victory_job = self.after(dT, self.catch_victory)
         self.gun2.start()
         self.gun1.start()
+        print('battlefield start')
         for t in self.targets.values():
             t.start()
         for b in self.bullets.values():
@@ -464,6 +460,7 @@ class BattleField(tk.Canvas):
     def play(self):
         self.play_jobs()
         self.gun1.play()
+        self.gun2.play()
         for t in self.targets.values():
             t.play()
         for b in self.bullets.values():
@@ -552,6 +549,7 @@ class BattleField(tk.Canvas):
     def get_state(self):
         state = {
             "gun": self.gun1.get_state(),
+            "gun2": self.gun2.get_state(),
             "targets": [t.get_state() for t in self.targets.values()],
             "bullets": [b.get_state() for b in self.bullets.values()],
             "bullet_counter": self.bullet_counter,
@@ -564,6 +562,7 @@ class BattleField(tk.Canvas):
 
     def set_state(self, state, job_init):
         self.gun1.set_state(state['gun'], job_init)
+        self.gun2.set_state(state['gun2'], job_init)
         self.remove_targets()
         self.create_targets_from_states(state['targets'], job_init)
         self.remove_bullets()
@@ -575,6 +574,19 @@ class BattleField(tk.Canvas):
             job_init if state['catch_victory_job'] else None
         self.canvas_restart_job = \
             job_init if state['canvas_restart_job'] else None
+
+    def change_gun(self, event):
+            print(event.keycode)
+            if self.gun1.job == None:
+                self.gun2.stop()
+                self.gun1.start()
+                print(
+                    '2 to 1'
+                )
+            else:
+                self.gun1.stop()
+                self.gun2.start()
+                print('1 to 2')
 
 
 class MainFrame(tk.Frame):
