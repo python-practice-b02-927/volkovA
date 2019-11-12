@@ -4,6 +4,7 @@ import math
 import time
 import gravity
 
+
 root = tk.Tk()
 #frame = tk.Frame(root)
 root.geometry('800x600')
@@ -35,7 +36,7 @@ class Ball():
         self.live = 30
 
     def set_coords(self):
-        '''что происзодит?'''
+        '''что происxодит?'''
         canv.coords(
                 self.id,
                 self.x - self.r,
@@ -106,8 +107,8 @@ class Gun():
         balls_number += 1
         new_ball = Ball(20 + max(self.power, 20) * math.cos(self.an),
                         450 + max(self.power, 20) * math.sin(self.an),
-                        5, (0.05*self.power)*math.cos(self.an),
-                        (-0.05*self.power)*math.sin(self.an),
+                        5, (0.1*self.power)*math.cos(self.an),
+                        (-0.1*self.power)*math.sin(self.an),
                         'yellow'
                         )
         balls += [new_ball]
@@ -145,7 +146,7 @@ class Target():
         self.vy = 1
         self.points = 0
         self.live = 1
-        self.id = canv.create_oval(0,0,0,0)
+        self.id = ''
         self.id_points = canv.create_text(30,30,text = self.points,font = '28')
         self.new_target()
 
@@ -156,8 +157,9 @@ class Target():
         y = self.y = rnd(300, 600 - r)
 
         color = self.color = 'red'
-        canv.coords(self.id, x-r, y-r, x+r, y+r)
-        canv.itemconfig(self.id, fill=color)
+        #canv.coords(self.id, x-r, y-r, x+r, y+r)
+        self.id = canv.create_oval(x-r, y-r, x+r, y+r, fill='red')
+ #       canv.itemconfig(self.id, fill=color)
 
     def hit(self, points=1):
         """Попадание шарика в цель."""
@@ -208,14 +210,14 @@ def new_game(event=''):
                     t.live = 0
                     t.hit()
                     gun1.targetting()
-                    canv.bind('<Button-1>', '')
-                    canv.bind('<ButtonRelease-1>', '')
+            #        canv.bind('<Button-1>', '')
+             #       canv.bind('<ButtonRelease-1>', '')
                     canv.itemconfig(textt, text='Вы уничтожили цель за ' + str(balls_number) + ' ' + text_ending(balls_number) + '!')
                     target1.new_target()
             gun1.targetting()
             gun1.power_up()
         canv.update()
-        time.sleep(0.005)
+        time.sleep(0.01)
     canv.itemconfig(textt, text='')
     canv.delete(Gun)
     root.after(500, new_game)
