@@ -190,7 +190,6 @@ class Gun(Agent):
         self.job = None
 
     def start(self):
-        print('sterted')
         self.bind_all()
         super().start()
 
@@ -271,7 +270,6 @@ class Gun(Agent):
         self.vy = 0
 
     def bind_all(self):
-        print("death")
         self.canvas.bind('<Button-1>', self.fire2_start, add='')
         self.canvas.bind('<ButtonRelease-1>', self.fire2_end, add='')
 
@@ -576,17 +574,17 @@ class BattleField(tk.Canvas):
             job_init if state['canvas_restart_job'] else None
 
     def change_gun(self, event):
-            print(event.keycode)
-            if self.gun1.job == None:
-                self.gun2.stop()
-                self.gun1.start()
-                print(
-                    '2 to 1'
-                )
-            else:
-                self.gun1.stop()
-                self.gun2.start()
-                print('1 to 2')
+        print(event.keycode)
+        if self.gun1.job == None:
+              self.gun2.stop()
+              self.gun1.start()
+              print(
+                   '2 to 1'
+              )
+        else:
+              self.gun1.stop()
+              self.gun2.start()
+              print('1 to 2')
 
 
 class MainFrame(tk.Frame):
