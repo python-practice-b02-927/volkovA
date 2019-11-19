@@ -174,7 +174,6 @@ class Target():
             self.vx *= -1
         if 600 < self.y + self.r or self.y - self.r < 0:
             self.vy *= -1
-        print('vx= ', self.vx, ' vy = ', self.vy)
         canv.move(self.id, self.vx, self.vy)
 
 
