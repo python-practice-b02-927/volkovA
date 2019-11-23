@@ -23,6 +23,12 @@ WINDOW_SHAPE = (800, 600)
 def pass_event(event):
     pass
 
+def get_from_server():
+    pass #TODO
+
+def send_to_server():
+    pass #TODO
+
 
 class Agent(ABC):
     def __init__(self):
