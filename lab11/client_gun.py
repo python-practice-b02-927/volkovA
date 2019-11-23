@@ -113,43 +113,43 @@ class Ball(Agent):
     def pause(self):
         super().pause()
 
-    def collision(self):
-        if self.x > 800 - self.r:
-            self.vx = -k * self.vx
-            self.x = 800 - self.r - 1
-        if self.x < self.r:
-            self.vx = -k * self.vx
-            self.x = self.r + 1
-        if self.y > 600 - self.r:
-            self.vy = -k * self.vy
-            self.y = 600 - self.r - 1
-        if self.y < self.r:
-            self.vy = -k * self.vy
-            self.y = self.r + 1
-
-    def calculate_coords(self):
-        self.collision()
-        self.x += self.vx
-        self.vy -= g * DT
-        self.y -= self.vy
+    # def collision(self):
+    #     if self.x > 800 - self.r:
+    #         self.vx = -k * self.vx
+    #         self.x = 800 - self.r - 1
+    #     if self.x < self.r:
+    #         self.vx = -k * self.vx
+    #         self.x = self.r + 1
+    #     if self.y > 600 - self.r:
+    #         self.vy = -k * self.vy
+    #         self.y = 600 - self.r - 1
+    #     if self.y < self.r:
+    #         self.vy = -k * self.vy
+    #         self.y = self.r + 1
+    #
+    # def calculate_coords(self):
+    #     self.collision()
+    #     self.x += self.vx
+    #     self.vy -= g * DT
+    #     self.y -= self.vy
 
     def update(self):
-        self.calculate_coords()
-        self.set_coords()
-        targets_hit = self.hit_targets()
-        if targets_hit:
-            self.destroy()
-        else:
-            self.live -= 1
-            if self.live > 0:
-                self.job = self.canvas.after(DT, self.update)
-            else:
-                self.destroy()
+        # self.calculate_coords()
+        # self.set_coords()
+        # targets_hit = self.hit_targets()
+        # if targets_hit:
+        #    self.destroy()
+        # else:
+        #     self.live -= 1
+        #     if self.live > 0:
+        #         self.job = self.canvas.after(DT, self.update)
+        #     else:
+        #         self.destroy()
 
-    def destroy(self):
-        self.stop()
-        self.canvas.delete(self.id)
-        del self.canvas.bullets[self.id]
+    # def destroy(self):
+    #     self.stop()
+    #     self.canvas.delete(self.id)
+    #     del self.canvas.bullets[self.id]
 
     def set_coords(self):
         self.canvas.coords(
