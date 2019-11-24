@@ -134,8 +134,9 @@ class Ball(Agent):
     #     self.y -= self.vy
 
     def update(self):
+        pass #TODO
         # self.calculate_coords()
-        # self.set_coords()
+        self.set_coords()
         # targets_hit = self.hit_targets()
         # if targets_hit:
         #    self.destroy()
@@ -160,20 +161,20 @@ class Ball(Agent):
                 self.y + self.r
         )
 
-    def hit_targets(self):
-        ids_hit = []
-        for t_id, t in list(self.canvas.targets.items()):
-            if hit_check.is_hit(
-                    (self.x, self.y),
-                    self.r,
-                    (-self.vx, -self.vy),
-                    (t.x, t.y),
-                    t.r
-            ):
-                self.canvas.report_hit(self, t)
-                ids_hit.append(t_id)
-                t.destroy()
-        return ids_hit
+    # def hit_targets(self):
+    #     ids_hit = []
+    #     for t_id, t in list(self.canvas.targets.items()):
+    #         if hit_check.is_hit(
+    #                 (self.x, self.y),
+    #                 self.r,
+    #                 (-self.vx, -self.vy),
+    #                 (t.x, t.y),
+    #                 t.r
+    #         ):
+    #             self.canvas.report_hit(self, t)
+    #             ids_hit.append(t_id)
+    #             t.destroy()
+    #     return ids_hit
 
     def get_state(self):
         state = {
@@ -234,27 +235,27 @@ class Gun(Agent):
         self.mouse_coords = [None, None]
 
     def update(self):
-        self.gun_coords[1] += self.vy
-        self.update_angle()
-        if self.f2_on:
-            self.f2_power = min(
-                self.f2_power + self.gun_power_gain, self.max_gun_power)
-        else:
-            self.f2_power = self.min_gun_power
+        # self.gun_coords[1] += self.vy
+        # self.update_angle()
+        # if self.f2_on:
+        #     self.f2_power = min(
+        #         self.f2_power + self.gun_power_gain, self.max_gun_power)
+        # else:
+        #     self.f2_power = self.min_gun_power
         self.redraw()
         self.job = self.canvas.after(DT, self.update)
 
-    def update_angle(self):
-        self.mouse_coords = self.canvas.get_mouse_coords()
-        dx = self.mouse_coords[0]-self.gun_coords[0]
-        dy = self.mouse_coords[1]-self.gun_coords[1]
-        self.an = math.atan2(dy, dx)
+    # def update_angle(self):
+    #     self.mouse_coords = self.canvas.get_mouse_coords()
+    #     dx = self.mouse_coords[0]-self.gun_coords[0]
+    #     dy = self.mouse_coords[1]-self.gun_coords[1]
+    #     self.an = math.atan2(dy, dx)
 
-    def get_gunpoint(self):
-        length = self.f2_power + self.zero_power_length
-        x = self.gun_coords[0] + length * math.cos(self.an)
-        y = self.gun_coords[1] + length * math.sin(self.an)
-        return x, y
+    # def get_gunpoint(self):
+    #     length = self.f2_power + self.zero_power_length
+    #     x = self.gun_coords[0] + length * math.cos(self.an)
+    #     y = self.gun_coords[1] + length * math.sin(self.an)
+    #     return x, y
 
     def redraw(self):
         self.canvas.coords(
@@ -262,31 +263,31 @@ class Gun(Agent):
             *self.gun_coords,
             *self.get_gunpoint()
         )
-        if self.f2_on:
-            self.canvas.itemconfig(self.id, fill='orange')
-        else:
-            self.canvas.itemconfig(self.id, fill='black')
+        # if self.f2_on:
+        #     self.canvas.itemconfig(self.id, fill='orange')
+        # else:
+        #     self.canvas.itemconfig(self.id, fill='black')
 
     def fire2_start(self, event):
         self.f2_on = 1
 
-    def fire2_end(self, event):
-        self.update_angle()
-        bullet_vx = self.f2_power * math.cos(self.an)
-        bullet_vy = -self.f2_power * math.sin(self.an)
-        bullet = Ball(self.canvas, *self.get_gunpoint(), bullet_vx, bullet_vy)
-        bullet.start()
-        self.f2_on = 0
-        self.f2_power = 10
+    # def fire2_end(self, event):
+    #     self.update_angle()
+    #     bullet_vx = self.f2_power * math.cos(self.an)
+    #     bullet_vy = -self.f2_power * math.sin(self.an)
+    #     bullet = Ball(self.canvas, *self.get_gunpoint(), bullet_vx, bullet_vy)
+    #     bullet.start()
+    #     self.f2_on = 0
+    #     self.f2_power = 10
 
-    def set_movement_direction_to_up(self, event):
-        self.vy = -self.gun_velocity
-
-    def set_movement_direction_to_down(self, event):
-        self.vy = self.gun_velocity
-
-    def stop_movement(self, event):
-        self.vy = 0
+    # def set_movement_direction_to_up(self, event):
+    #     self.vy = -self.gun_velocity
+    #
+    # def set_movement_direction_to_down(self, event):
+    #     self.vy = self.gun_velocity
+    #
+    # def stop_movement(self, event):
+    #     self.vy = 0
 
     def bind_all(self):
         self.canvas.bind('<Button-1>', self.fire2_start, add='')
@@ -375,9 +376,9 @@ class Target(Agent):
         )
 
     def move(self):
-        if self.y > 500 or self.y < 100:
-            self.vy = -self.vy
-        self.y -= self.vy
+    #     if self.y > 500 or self.y < 100:
+    #         self.vy = -self.vy
+    #     self.y -= self.vy
         self.set_coords()
 
     def get_state(self):
@@ -426,43 +427,43 @@ class BattleField(tk.Canvas):
             self.gun_right.stop()
             self.gun_left.start()
 
-    def remove_targets(self, targets_to_remove=None):
-        if targets_to_remove is None:
-            ids = list(self.targets)
-        else:
-            ids = list(targets_to_remove)
-        for id_ in ids:
-            # Не нужно удалять элемент словаря `self.targets`, так как удаление
-            # осуществляется в методе `Target.destroy()`.
-            self.targets[id_].destroy()
+    # def remove_targets(self, targets_to_remove=None):
+    #     if targets_to_remove is None:
+    #         ids = list(self.targets)
+    #     else:
+    #         ids = list(targets_to_remove)
+    #     for id_ in ids:
+    #         # Не нужно удалять элемент словаря `self.targets`, так как удаление
+    #         # осуществляется в методе `Target.destroy()`.
+    #         self.targets[id_].destroy()
 
-    def remove_bullets(self, bullets_to_remove=None):
-        if bullets_to_remove is None:
-            ids = list(self.bullets)
-        else:
-            ids = list(bullets_to_remove)
-        for id_ in ids:
-            # Не нужно удалять элемент словаря `self.bullets`, так как удаление
-            # осуществляется в методе `Ball.destroy()`.
-            self.bullets[id_].destroy()
+    # def remove_bullets(self, bullets_to_remove=None):
+    #     if bullets_to_remove is None:
+    #         ids = list(self.bullets)
+    #     else:
+    #         ids = list(bullets_to_remove)
+    #     for id_ in ids:
+    #         # Не нужно удалять элемент словаря `self.bullets`, так как удаление
+    #         # осуществляется в методе `Ball.destroy()`.
+    #         self.bullets[id_].destroy()
+    #
+    # def create_targets(self):
+    #     for _ in range(self.num_targets):
+    #         # Не нужно добавлять элемент в словарь `self.targets`,
+    #         # так как удаление осуществляется в методе `Target.__init__()`
+    #         Target(self)
 
-    def create_targets(self):
-        for _ in range(self.num_targets):
-            # Не нужно добавлять элемент в словарь `self.targets`,
-            # так как удаление осуществляется в методе `Target.__init__()`
-            Target(self)
+    # def create_targets_from_states(self, states, job_init):
+    #     states = copy.deepcopy(states)
+    #     for state in states:
+    #         job_active = state.pop('job')
+    #         Target(self, **state, job_init=job_init if job_active else None)
 
-    def create_targets_from_states(self, states, job_init):
-        states = copy.deepcopy(states)
-        for state in states:
-            job_active = state.pop('job')
-            Target(self, **state, job_init=job_init if job_active else None)
-
-    def create_bullets_from_states(self, states, job_init):
-        states = copy.deepcopy(states)
-        for state in states:
-            job_active = state.pop('job')
-            Ball(self, **state, job_init=job_init if job_active else None)
+    # def create_bullets_from_states(self, states, job_init):
+    #     states = copy.deepcopy(states)
+    #     for state in states:
+    #         job_active = state.pop('job')
+    #         Ball(self, **state, job_init=job_init if job_active else None)
 
     def start(self):
         self.catch_victory_job = self.after(DT, self.catch_victory)
